@@ -21,6 +21,8 @@ function resolveDistDir() {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: { webpackMemoryOptimizations: true, cpus: 1 },
+
   typedRoutes: true,
   outputFileTracingRoot: projectRoot,
   distDir: resolveDistDir(),
@@ -37,6 +39,10 @@ const nextConfig = {
     "/api/**": ["./data/**"],
   },
   webpack: (config, { isServer, webpack }) => {
+    // Explicit @ alias to project root (tsconfig paths @/* -> ./*).
+    config.resolve = config.resolve || {};
+    config.resolve.alias = { ...(config.resolve.alias || {}), "@": projectRoot };
+
     if (!isServer) {
       // @gltf-transform/core 的 dist 引用 node:fs / node:path(带 node: 前缀),
       // 它的 browser 字段只映射了裸 fs/path,webpack 对 node: 前缀报 UnhandledSchemeError。
