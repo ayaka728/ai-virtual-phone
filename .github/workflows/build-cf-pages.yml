@@ -35,7 +35,10 @@ jobs:
         run: npm install --legacy-peer-deps
 
       - name: Install next-on-pages
-        run: npm install --no-save --legacy-peer-deps @cloudflare/next-on-pages@1.13.16 esbuild@0.25.0
+        run: npm install --save-dev --legacy-peer-deps @cloudflare/next-on-pages@1.13.16 esbuild@0.17.19
+
+      - name: Rebuild esbuild binary
+        run: npm rebuild esbuild || true
 
       - name: Build (next-on-pages)
         run: npx @cloudflare/next-on-pages@1.13.16
