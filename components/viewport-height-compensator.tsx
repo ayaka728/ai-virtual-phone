@@ -9,7 +9,9 @@ import { useEffect } from "react";
 export function ViewportHeightCompensator() {
   useEffect(() => {
     const handleResize = () => {
-      const vh = window.innerHeight * 0.01;
+      // 优先使用最新的 VisualViewport 高度，在键盘弹起时它会正确缩小
+      const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+      const vh = viewportHeight * 0.01;
       document.documentElement.style.setProperty("--vh", `${vh}px`);
     };
 
