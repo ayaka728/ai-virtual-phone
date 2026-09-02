@@ -947,6 +947,15 @@ function useAndroidCaretKeyboardLift() {
     const update = () => {
       raf = 0;
       const element = focusedElement;
+
+      // 如果在套壳 WebView 环境下（或者已经通过 viewport interactive-widget 处理），
+      // 强烈建议跳过 JS 的二次抬升，防止双重抬起冲突。
+      const isWebView = /wv|WebView|Android.*Version\/[0-9.]+/i.test(navigator.userAgent);
+      if (isWebView) {
+        applyLift(0);
+        return;
+      }
+
       if (!element || document.activeElement !== element || !mobileMq.matches || !viewport) {
         applyLift(0);
         return;
